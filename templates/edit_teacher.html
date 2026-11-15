@@ -1,0 +1,67 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Teacher | School Management System</title>
+    <link rel="stylesheet"
+    href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<div class="main-content">
+
+    <header class="topbar">
+        <div>
+            <h2>Edit Teacher</h2>
+            <p>Update teacher information</p>
+        </div>
+        <a href="{{ url_for('teachers') }}">Back to Teachers</a>
+    </header>
+
+    <section class="welcome-card">
+        <h2>Update Teacher Details</h2>
+    </section>
+
+    <section class="quick-access">
+        <form method="POST"
+              action="{{ url_for('edit_teacher', teacher_id=teacher.id) }}">
+
+            <input type="hidden" name="csrf_token"
+                   value="{{ csrf_token() }}">
+
+            <div class="input-group">
+                <label>Teacher Name</label>
+                <input type="text" name="name"
+                       value="{{ teacher.name }}" required>
+            </div>
+
+            <div class="input-group">
+                <label>Subject</label>
+                <input type="text" name="subject"
+                       value="{{ teacher.subject or '' }}">
+            </div>
+
+            <div class="input-group">
+                <label>Phone Number</label>
+                <input type="text" name="phone"
+                       value="{{ teacher.phone or '' }}">
+            </div>
+
+            <div class="input-group">
+                <label>Email</label>
+                <input type="email" name="email"
+                       value="{{ teacher.email or '' }}">
+            </div>
+
+            <button type="submit" class="login-btn">
+                Update Teacher
+            </button>
+
+        </form>
+    </section>
+
+</div>
+</body>
+</html>

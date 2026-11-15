@@ -1,0 +1,96 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teachers | School Management System</title>
+    <link rel="stylesheet"
+    href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<div class="main-content">
+
+    <header class="topbar">
+        <div>
+            <h2>Teacher Management</h2>
+            <p>View and manage teacher records</p>
+        </div>
+        <a href="{{ url_for('dashboard') }}">Back to Dashboard</a>
+    </header>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}
+            <div class="alert {{ category }}">{{ message }}</div>
+        {% endfor %}
+    {% endwith %}
+
+    <section class="quick-access">
+
+        <div class="student-header">
+            <h2>Registered Teachers</h2>
+            <a href="{{ url_for('add_teacher') }}" class="add-student-btn">
+                + Add New Teacher
+            </a>
+        </div>
+
+        <form method="GET" action="{{ url_for('teachers') }}"
+              class="search-form">
+            <input type="text" name="search"
+                   placeholder="Search by name or subject"
+                   value="{{ search }}">
+            <button type="submit" class="search-btn">Search</button>
+            <a href="{{ url_for('teachers') }}">Clear</a>
+        </form>
+
+        <div class="table-container">
+            <table class="student-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Subject</th>
+                        <th>Phone</th>
+                        <th>Email</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for teacher in teachers %}
+                    <tr>
+                        <td>{{ teacher.name }}</td>
+                        <td>{{ teacher.subject or '-' }}</td>
+                        <td>{{ teacher.phone or '-' }}</td>
+                        <td>{{ teacher.email or '-' }}</td>
+                        <td class="action-cell">
+                            <a class="edit-btn"
+                               href="{{ url_for('edit_teacher', teacher_id=teacher.id) }}">
+                                Edit
+                            </a>
+
+                            <form method="POST"
+                                  action="{{ url_for('delete_teacher', teacher_id=teacher.id) }}"
+                                  onsubmit="return confirm('Delete this teacher?');">
+                                <input type="hidden" name="csrf_token"
+                                       value="{{ csrf_token() }}">
+                                <button type="submit" class="delete-btn">
+                                    Delete
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="5">No teacher records found.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    </section>
+</div>
+
+</body>
+</html>

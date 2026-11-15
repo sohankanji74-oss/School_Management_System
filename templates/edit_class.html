@@ -1,0 +1,63 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Class</title>
+    <link rel="stylesheet"
+    href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<div class="main-content">
+
+    <header class="topbar">
+        <div>
+            <h2>Edit Class</h2>
+            <p>Update class information</p>
+        </div>
+        <a href="{{ url_for('classes') }}">Back to Classes</a>
+    </header>
+
+    <section class="welcome-card">
+        <h2>Update Class Details</h2>
+    </section>
+
+    <section class="quick-access">
+
+        <form method="POST"
+              action="{{ url_for('edit_class', class_id=school_class.id) }}">
+
+            <input type="hidden" name="csrf_token"
+                   value="{{ csrf_token() }}">
+
+            <div class="input-group">
+                <label>Class Name</label>
+                <input type="text" name="class_name"
+                       value="{{ school_class.class_name }}" required>
+            </div>
+
+            <div class="input-group">
+                <label>Section</label>
+                <input type="text" name="section"
+                       value="{{ school_class.section or '' }}">
+            </div>
+
+            <div class="input-group">
+                <label>Class Teacher</label>
+                <input type="text" name="class_teacher"
+                       value="{{ school_class.class_teacher or '' }}">
+            </div>
+
+            <button type="submit" class="login-btn">
+                Update Class
+            </button>
+
+        </form>
+
+    </section>
+</div>
+
+</body>
+</html>

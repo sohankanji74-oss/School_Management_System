@@ -1,0 +1,67 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Class | School Management System</title>
+
+    <link rel="stylesheet"
+    href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+<div class="main-content">
+
+    <header class="topbar">
+        <div>
+            <h2>Add New Class</h2>
+            <p>Create a class or section</p>
+        </div>
+
+        <a href="{{ url_for('dashboard') }}">Back to Dashboard</a>
+    </header>
+
+    <section class="welcome-card">
+        <h2>Class Registration</h2>
+        <p>Enter the class details below.</p>
+    </section>
+
+    <section class="quick-access">
+
+        <form method="POST" action="{{ url_for('add_class') }}">
+
+            <input type="hidden" name="csrf_token"
+                   value="{{ csrf_token() }}">
+
+            <div class="input-group">
+                <label>Class Name</label>
+                <input type="text" name="class_name"
+                       placeholder="Example: Class 8" required>
+            </div>
+
+            <div class="input-group">
+                <label>Section</label>
+                <input type="text" name="section"
+                       placeholder="Example: A">
+            </div>
+
+            <div class="input-group">
+                <label>Class Teacher</label>
+                <input type="text" name="class_teacher"
+                       placeholder="Enter class teacher's name">
+            </div>
+
+            <button type="submit" class="login-btn">
+                Save Class
+            </button>
+
+        </form>
+
+    </section>
+
+</div>
+
+</body>
+</html>

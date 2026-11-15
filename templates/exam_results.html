@@ -1,0 +1,147 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Examination Results</title>
+    <link rel="stylesheet"
+    href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<div class="main-content">
+
+    <header class="topbar">
+        <div>
+            <h2>Examination Results</h2>
+            <p>{{ exam.exam_name }}</p>
+        </div>
+        <a href="{{ url_for('exams') }}">Back to Examinations</a>
+    </header>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}
+            <div class="alert {{ category }}">{{ message }}</div>
+        {% endfor %}
+    {% endwith %}
+
+    <section class="welcome-card">
+        <h2>{{ exam.exam_name }}</h2>
+        <p>Date: {{ exam.exam_date.strftime('%d-%m-%Y') }}</p>
+    </section>
+
+    <section class="quick-access">
+
+        <form method="GET"
+              action="{{ url_for('exam_results', exam_id=exam.id) }}"
+              class="attendance-filter">
+
+            <div class="input-group">
+                <label>Select Subject</label>
+                <input type="text" name="subject"
+                       value="{{ selected_subject }}"
+                       placeholder="Example: Mathematics" required>
+            </div>
+
+            <button type="submit" class="search-btn">
+                Load Subject
+            </button>
+
+        </form>
+
+    </section>
+
+    {% if selected_subject %}
+
+    <section class="quick-access">
+
+        <h2>Enter Marks: {{ selected_subject }}</h2>
+
+        <form method="POST"
+              action="{{ url_for('exam_results', exam_id=exam.id) }}">
+
+            <input type="hidden" name="csrf_token"
+                   value="{{ csrf_token() }}">
+
+            <input type="hidden" name="subject"
+                   value="{{ selected_subject }}">
+
+            <div class="input-group">
+                <label>Total Marks</label>
+                <input type="number" name="total_marks"
+                       min="1" step="0.01"
+                       placeholder="Example: 100" required>
+            </div>
+
+            <div class="table-container">
+
+                <table class="student-table">
+
+                    <thead>
+                        <tr>
+                            <th>Admission No.</th>
+                            <th>Student Name</th>
+                            <th>Marks Obtained</th>
+                            <th>Percentage</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for student in students %}
+                        {% set result = result_map.get(student.id) %}
+
+                        <tr>
+                            <td>{{ student.admission_no }}</td>
+                            <td>{{ student.name }}</td>
+
+                            <td>
+                                <input type="number"
+                                       name="marks_{{ student.id }}"
+                                       min="0" step="0.01"
+                                       value="{{ result.marks_obtained if result else '' }}"
+                                       placeholder="Marks">
+                            </td>
+
+                            <td>
+                                {% if result %}
+                                    {{ "%.2f"|format(result.marks_obtained / result.total_marks * 100) }}%
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+
+                            <td>
+                                {% if result %}
+                                    {{ 'Pass' if result.marks_obtained / result.total_marks >= 0.33 else 'Fail' }}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                        </tr>
+
+                        {% else %}
+                        <tr>
+                            <td colspan="5">No students in this class.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+
+                </table>
+
+            </div>
+
+            <button type="submit" class="login-btn attendance-save">
+                Save Examination Results
+            </button>
+
+        </form>
+
+    </section>
+
+    {% endif %}
+
+</div>
+</body>
+</html>

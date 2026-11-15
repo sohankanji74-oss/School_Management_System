@@ -1,0 +1,74 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fees Management</title>
+    <link rel="stylesheet"
+    href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<div class="main-content">
+
+    <header class="topbar">
+        <div>
+            <h2>Fees Management</h2>
+            <p>Manage student fees and payments</p>
+        </div>
+        <a href="{{ url_for('dashboard') }}">Dashboard</a>
+    </header>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}
+            <div class="alert {{ category }}">{{ message }}</div>
+        {% endfor %}
+    {% endwith %}
+
+    <section class="quick-access">
+
+        <h2>Student Fee Records</h2>
+
+        <div class="table-container">
+            <table class="student-table">
+                <thead>
+                    <tr>
+                        <th>Admission No.</th>
+                        <th>Student Name</th>
+                        <th>Total Fee (₹)</th>
+                        <th>Paid (₹)</th>
+                        <th>Pending (₹)</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for item in fee_data %}
+                    <tr>
+                        <td>{{ item.student.admission_no }}</td>
+                        <td>{{ item.student.name }}</td>
+                        <td>₹{{ "%.2f"|format(item.total_fee) }}</td>
+                        <td>₹{{ "%.2f"|format(item.total_paid) }}</td>
+                        <td>₹{{ "%.2f"|format(item.pending) }}</td>
+                        <td>
+                            <a class="edit-btn"
+                               href="{{ url_for('manage_fee', student_id=item.student.id) }}">
+                                Manage Fees
+                            </a>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="6">No students registered yet.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    </section>
+
+</div>
+</body>
+</html>

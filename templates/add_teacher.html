@@ -1,0 +1,67 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Teacher | School Management System</title>
+    <link rel="stylesheet"
+    href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<div class="main-content">
+
+    <header class="topbar">
+        <div>
+            <h2>Add New Teacher</h2>
+            <p>Register a teacher</p>
+        </div>
+        <a href="{{ url_for('teachers') }}">Back to Teachers</a>
+    </header>
+
+    <section class="welcome-card">
+        <h2>Teacher Registration Form</h2>
+        <p>Enter the teacher's information below.</p>
+    </section>
+
+    <section class="quick-access">
+        <form method="POST" action="{{ url_for('add_teacher') }}">
+
+            <input type="hidden" name="csrf_token"
+                   value="{{ csrf_token() }}">
+
+            <div class="input-group">
+                <label>Teacher Name</label>
+                <input type="text" name="name"
+                       placeholder="Enter full name" required>
+            </div>
+
+            <div class="input-group">
+                <label>Subject</label>
+                <input type="text" name="subject"
+                       placeholder="Example: Mathematics">
+            </div>
+
+            <div class="input-group">
+                <label>Phone Number</label>
+                <input type="text" name="phone"
+                       placeholder="Enter phone number">
+            </div>
+
+            <div class="input-group">
+                <label>Email</label>
+                <input type="email" name="email"
+                       placeholder="Enter email address">
+            </div>
+
+            <button type="submit" class="login-btn">
+                Save Teacher
+            </button>
+
+        </form>
+    </section>
+
+</div>
+</body>
+</html>

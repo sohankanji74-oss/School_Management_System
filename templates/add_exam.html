@@ -1,0 +1,78 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Examination</title>
+    <link rel="stylesheet"
+    href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<div class="main-content">
+
+    <header class="topbar">
+        <div>
+            <h2>Create Examination</h2>
+            <p>Enter examination details</p>
+        </div>
+        <a href="{{ url_for('exams') }}">Back to Examinations</a>
+    </header>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}
+            <div class="alert {{ category }}">{{ message }}</div>
+        {% endfor %}
+    {% endwith %}
+
+    <section class="welcome-card">
+        <h2>New Examination</h2>
+        <p>Choose a class and examination date.</p>
+    </section>
+
+    <section class="quick-access">
+
+        <form method="POST" action="{{ url_for('add_exam') }}">
+
+            <input type="hidden" name="csrf_token"
+                   value="{{ csrf_token() }}">
+
+            <div class="input-group">
+                <label>Examination Name</label>
+                <input type="text" name="exam_name"
+                       placeholder="Example: First Semester Examination"
+                       required>
+            </div>
+
+            <div class="input-group">
+                <label>Select Class</label>
+
+                <select name="class_id" required>
+                    <option value="">Choose Class</option>
+
+                    {% for school_class in classes %}
+                    <option value="{{ school_class.id }}">
+                        {{ school_class.class_name }}
+                        {{ school_class.section or '' }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label>Examination Date</label>
+                <input type="date" name="exam_date" required>
+            </div>
+
+            <button type="submit" class="login-btn">
+                Create Examination
+            </button>
+
+        </form>
+
+    </section>
+
+</div>
+</body>
+</html>

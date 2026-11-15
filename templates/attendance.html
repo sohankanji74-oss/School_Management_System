@@ -1,0 +1,166 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Attendance Management</title>
+
+    <link rel="stylesheet"
+    href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+<div class="main-content">
+
+    <header class="topbar">
+        <div>
+            <h2>Attendance Management</h2>
+            <p>Mark and manage student attendance</p>
+        </div>
+
+        <a href="{{ url_for('dashboard') }}">Back to Dashboard</a>
+    </header>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}
+            <div class="alert {{ category }}">{{ message }}</div>
+        {% endfor %}
+    {% endwith %}
+
+    <section class="welcome-card">
+        <h2>Daily Attendance</h2>
+        <p>Select a class and date to mark attendance.</p>
+    </section>
+
+    <section class="quick-access">
+
+        <form method="GET" action="{{ url_for('attendance') }}"
+              class="attendance-filter">
+
+            <div class="input-group">
+                <label>Select Class</label>
+
+                <select name="class_id" required>
+                    <option value="">Choose Class</option>
+
+                    {% for school_class in classes %}
+                    <option value="{{ school_class.id }}"
+                        {% if selected_class_id|int == school_class.id %}selected{% endif %}>
+
+                        {{ school_class.class_name }}
+                        {{ school_class.section or '' }}
+
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label>Select Date</label>
+
+                <input type="date"
+                       name="attendance_date"
+                       value="{{ selected_date }}"
+                       required>
+            </div>
+
+            <button type="submit" class="search-btn">
+                Load Students
+            </button>
+
+        </form>
+
+    </section>
+
+    {% if selected_class_id and students %}
+
+    <section class="quick-access">
+
+        <h2>Student Attendance List</h2>
+
+        <form method="POST" action="{{ url_for('attendance') }}">
+
+            <input type="hidden" name="csrf_token"
+                   value="{{ csrf_token() }}">
+
+            <input type="hidden" name="class_id"
+                   value="{{ selected_class_id }}">
+
+            <input type="hidden" name="attendance_date"
+                   value="{{ selected_date }}">
+
+            <div class="table-container">
+
+                <table class="student-table">
+
+                    <thead>
+                        <tr>
+                            <th>Admission No.</th>
+                            <th>Student Name</th>
+                            <th>Attendance Status</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        {% for student in students %}
+
+                        <tr>
+                            <td>{{ student.admission_no }}</td>
+                            <td>{{ student.name }}</td>
+
+                            <td>
+                                <select name="status_{{ student.id }}"
+                                        class="attendance-select" required>
+
+                                    <option value=""
+                                        {% if not attendance_map.get(student.id) %}selected{% endif %}>
+                                        Select Status
+                                    </option>
+
+                                    <option value="Present"
+                                        {% if attendance_map.get(student.id) == 'Present' %}selected{% endif %}>
+                                        Present
+                                    </option>
+
+                                    <option value="Absent"
+                                        {% if attendance_map.get(student.id) == 'Absent' %}selected{% endif %}>
+                                        Absent
+                                    </option>
+
+                                </select>
+                            </td>
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+            <button type="submit" class="login-btn attendance-save">
+                Save Attendance
+            </button>
+
+        </form>
+
+    </section>
+
+    {% elif selected_class_id %}
+
+        <section class="welcome-card">
+            <h2>No Students Found</h2>
+            <p>There are no registered students in this class.</p>
+        </section>
+
+    {% endif %}
+
+</div>
+
+</body>
+</html>
