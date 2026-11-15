@@ -11,9 +11,6 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ.get(
     'SECRET_KEY',
     'temporary-local-development-key'
-)app.config['SECRET_KEY'] = os.environ.get(
-    'SECRET_KEY',
-    'temporary-local-development-key'
 )
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///school_management.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
