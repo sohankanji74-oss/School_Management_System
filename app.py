@@ -912,6 +912,23 @@ def delete_exam(exam_id):
 with app.app_context():
     db.create_all()
 
+    admin_username = os.environ.get('ADMIN_USERNAME')
+    admin_password = os.environ.get('ADMIN_PASSWORD')
+
+    if admin_username and admin_password:
+        existing_admin = Admin.query.filter_by(
+            username=admin_username
+        ).first()
+
+        if not existing_admin:
+            new_admin = Admin(username=admin_username)
+            new_admin.set_password(admin_password)
+
+            db.session.add(new_admin)
+            db.session.commit()
+
+            print("Online admin account created successfully!")
+
 
 # Run application
 if __name__ == '__main__':
